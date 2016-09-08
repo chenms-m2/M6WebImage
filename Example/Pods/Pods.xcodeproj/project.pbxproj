@@ -1,0 +1,537 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		072878FBA2461AFA9BCA77DCC432B745 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E89230EF59BC255123B67864ACF77 /* Foundation.framework */; };
+		2A5E224A06A1A626E1609254B4FA9382 /* Pods-M6WebImage_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD8D6D454507A93EB3F832F1CFA470A /* Pods-M6WebImage_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2DB1E68A0396A55013F950E4F1BBA5CF /* M6WebImage-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0EB40F6E1968910079D12290087AEF64 /* M6WebImage-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		64CFF84CC2760271ADF2FD5EAE7021C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E89230EF59BC255123B67864ACF77 /* Foundation.framework */; };
+		903423BA1D7FF5AE00E3553E /* UIImageView+M6WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423B91D7FF5AE00E3553E /* UIImageView+M6WebImage.swift */; };
+		903423BC1D7FFB9F00E3553E /* M6WebImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BB1D7FFB9F00E3553E /* M6WebImageManager.swift */; };
+		903423BE1D80015B00E3553E /* M6WebImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BD1D80015B00E3553E /* M6WebImageHelper.swift */; };
+		903423C01D804EB600E3553E /* M6WebImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BF1D804EB600E3553E /* M6WebImageDownloader.swift */; };
+		903423C21D804EC100E3553E /* M6WebImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423C11D804EC100E3553E /* M6WebImageCache.swift */; };
+		972A065D31C57B89EBDA65F1B31D9D85 /* Pods-M6WebImage_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E6F10B5E08A3E9E31ADDCE226CFCDC /* Pods-M6WebImage_Tests-dummy.m */; };
+		9AEDCBD95DC5AB3C0F97392D050555BC /* M6WebImage-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9197C4BDCF48D46075243990694F1783 /* M6WebImage-dummy.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6638EB92D308A9D0611CFA6B9B2313E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D17F6F96FD0E5AB00C6715CBC0F28113;
+			remoteInfo = M6WebImage;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		058E14881B468FB89593B6706183BB5A /* M6WebImage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = M6WebImage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0EB40F6E1968910079D12290087AEF64 /* M6WebImage-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "M6WebImage-umbrella.h"; sourceTree = "<group>"; };
+		1FD8D6D454507A93EB3F832F1CFA470A /* Pods-M6WebImage_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-M6WebImage_Tests-umbrella.h"; sourceTree = "<group>"; };
+		2E913855AF4E28719D132A3096B27AF8 /* M6WebImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = M6WebImage.xcconfig; sourceTree = "<group>"; };
+		359CA131C273CBE4FBD0515D8D83868E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		39E6F10B5E08A3E9E31ADDCE226CFCDC /* Pods-M6WebImage_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-M6WebImage_Tests-dummy.m"; sourceTree = "<group>"; };
+		3BDA3B0298383247AF3CF874F071860D /* Pods-M6WebImage_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-M6WebImage_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		3E4E89230EF59BC255123B67864ACF77 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		5699249C536F4CA2A7FFA00DCD452BEC /* Pods-M6WebImage_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-M6WebImage_Tests.modulemap"; sourceTree = "<group>"; };
+		6C569A2BB5279615879E49BAF29ED6DA /* Pods-M6WebImage_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-M6WebImage_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		71BBF332B3174CE298D2372CD21F44DE /* Pods-M6WebImage_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-M6WebImage_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		783C54712AF81A21AAD711AE4D25FB4E /* M6WebImage.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = M6WebImage.modulemap; sourceTree = "<group>"; };
+		8318093CEEFB4072A909115505A2A817 /* Pods-M6WebImage_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-M6WebImage_Tests-frameworks.sh"; sourceTree = "<group>"; };
+		903423B91D7FF5AE00E3553E /* UIImageView+M6WebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+M6WebImage.swift"; sourceTree = "<group>"; };
+		903423BB1D7FFB9F00E3553E /* M6WebImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageManager.swift; sourceTree = "<group>"; };
+		903423BD1D80015B00E3553E /* M6WebImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageHelper.swift; sourceTree = "<group>"; };
+		903423BF1D804EB600E3553E /* M6WebImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageDownloader.swift; sourceTree = "<group>"; };
+		903423C11D804EC100E3553E /* M6WebImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageCache.swift; sourceTree = "<group>"; };
+		9197C4BDCF48D46075243990694F1783 /* M6WebImage-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "M6WebImage-dummy.m"; sourceTree = "<group>"; };
+		960D3982373441E76FB9DDA2FAC5054E /* M6WebImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "M6WebImage-prefix.pch"; sourceTree = "<group>"; };
+		9D0DB4437638EB32DD470DE5A0B286EC /* Pods-M6WebImage_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-M6WebImage_Tests-resources.sh"; sourceTree = "<group>"; };
+		A231302F74533E098173081901A54C35 /* Pods-M6WebImage_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-M6WebImage_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
+		BA6428E9F66FD5A23C0A2E06ED26CD2F /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		C1685E8DD0D9CEAE91C62EC89AFA1995 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D5DF033C83932C6D602F79A826F0A7B1 /* Pods_M6WebImage_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_M6WebImage_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		75D440BBB21A9C1558A7B680AA8F01AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				072878FBA2461AFA9BCA77DCC432B745 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C5C4CD082EB94CEAB35A5DC862CFF0A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64CFF84CC2760271ADF2FD5EAE7021C4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0EA457CC52AE64197538F2B06FFA9917 /* M6WebImage */ = {
+			isa = PBXGroup;
+			children = (
+				B6115A3EBFDC0B346588FFA3859125FF /* M6WebImage */,
+				1CA48A473FE3A2A6E8C324D73890A390 /* Support Files */,
+			);
+			name = M6WebImage;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		1CA48A473FE3A2A6E8C324D73890A390 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				C1685E8DD0D9CEAE91C62EC89AFA1995 /* Info.plist */,
+				783C54712AF81A21AAD711AE4D25FB4E /* M6WebImage.modulemap */,
+				2E913855AF4E28719D132A3096B27AF8 /* M6WebImage.xcconfig */,
+				9197C4BDCF48D46075243990694F1783 /* M6WebImage-dummy.m */,
+				960D3982373441E76FB9DDA2FAC5054E /* M6WebImage-prefix.pch */,
+				0EB40F6E1968910079D12290087AEF64 /* M6WebImage-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/M6WebImage";
+			sourceTree = "<group>";
+		};
+		368053748F8F05B738F1E9A54B4CE498 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				058E14881B468FB89593B6706183BB5A /* M6WebImage.framework */,
+				D5DF033C83932C6D602F79A826F0A7B1 /* Pods_M6WebImage_Tests.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5EC2C542F692DF05862908B8D82E5624 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0EA457CC52AE64197538F2B06FFA9917 /* M6WebImage */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				BA6428E9F66FD5A23C0A2E06ED26CD2F /* Podfile */,
+				5EC2C542F692DF05862908B8D82E5624 /* Development Pods */,
+				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				368053748F8F05B738F1E9A54B4CE498 /* Products */,
+				D89BE6E5E6D48FDFAB291CFB1847C680 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		AB5E00AAE567EC21B403BE21ECC7D712 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				903423B91D7FF5AE00E3553E /* UIImageView+M6WebImage.swift */,
+				903423BB1D7FFB9F00E3553E /* M6WebImageManager.swift */,
+				903423C11D804EC100E3553E /* M6WebImageCache.swift */,
+				903423BF1D804EB600E3553E /* M6WebImageDownloader.swift */,
+				903423BD1D80015B00E3553E /* M6WebImageHelper.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		B6115A3EBFDC0B346588FFA3859125FF /* M6WebImage */ = {
+			isa = PBXGroup;
+			children = (
+				AB5E00AAE567EC21B403BE21ECC7D712 /* Classes */,
+			);
+			path = M6WebImage;
+			sourceTree = "<group>";
+		};
+		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BF6342C8B29F4CEEA088EFF7AB4DE362 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BF6342C8B29F4CEEA088EFF7AB4DE362 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				3E4E89230EF59BC255123B67864ACF77 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		C682F917B1E49512E28BDC6C444C409F /* Pods-M6WebImage_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				359CA131C273CBE4FBD0515D8D83868E /* Info.plist */,
+				5699249C536F4CA2A7FFA00DCD452BEC /* Pods-M6WebImage_Tests.modulemap */,
+				6C569A2BB5279615879E49BAF29ED6DA /* Pods-M6WebImage_Tests-acknowledgements.markdown */,
+				A231302F74533E098173081901A54C35 /* Pods-M6WebImage_Tests-acknowledgements.plist */,
+				39E6F10B5E08A3E9E31ADDCE226CFCDC /* Pods-M6WebImage_Tests-dummy.m */,
+				8318093CEEFB4072A909115505A2A817 /* Pods-M6WebImage_Tests-frameworks.sh */,
+				9D0DB4437638EB32DD470DE5A0B286EC /* Pods-M6WebImage_Tests-resources.sh */,
+				1FD8D6D454507A93EB3F832F1CFA470A /* Pods-M6WebImage_Tests-umbrella.h */,
+				3BDA3B0298383247AF3CF874F071860D /* Pods-M6WebImage_Tests.debug.xcconfig */,
+				71BBF332B3174CE298D2372CD21F44DE /* Pods-M6WebImage_Tests.release.xcconfig */,
+			);
+			name = "Pods-M6WebImage_Tests";
+			path = "Target Support Files/Pods-M6WebImage_Tests";
+			sourceTree = "<group>";
+		};
+		D89BE6E5E6D48FDFAB291CFB1847C680 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				C682F917B1E49512E28BDC6C444C409F /* Pods-M6WebImage_Tests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		54D301B424481262911E97C811EB9E8B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A5E224A06A1A626E1609254B4FA9382 /* Pods-M6WebImage_Tests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0B5BE38B6EC492AE1AE93CA344AE6BF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DB1E68A0396A55013F950E4F1BBA5CF /* M6WebImage-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7044437AD2E7786596A2A68846F5DA8D /* Pods-M6WebImage_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A0DB2E06D95EED56DDA49B38F664CCA /* Build configuration list for PBXNativeTarget "Pods-M6WebImage_Tests" */;
+			buildPhases = (
+				AF2C782227C20032A7F911B113210656 /* Sources */,
+				C5C4CD082EB94CEAB35A5DC862CFF0A7 /* Frameworks */,
+				54D301B424481262911E97C811EB9E8B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E314B55156E0458163A2E7B7DBCE0D74 /* PBXTargetDependency */,
+			);
+			name = "Pods-M6WebImage_Tests";
+			productName = "Pods-M6WebImage_Tests";
+			productReference = D5DF033C83932C6D602F79A826F0A7B1 /* Pods_M6WebImage_Tests.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D17F6F96FD0E5AB00C6715CBC0F28113 /* M6WebImage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A623F47AB51B8F66AF4D6F4B3CA8259E /* Build configuration list for PBXNativeTarget "M6WebImage" */;
+			buildPhases = (
+				931D9F8EE871F9AFF1C2D1DC86E04094 /* Sources */,
+				75D440BBB21A9C1558A7B680AA8F01AC /* Frameworks */,
+				D0B5BE38B6EC492AE1AE93CA344AE6BF /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = M6WebImage;
+			productName = M6WebImage;
+			productReference = 058E14881B468FB89593B6706183BB5A /* M6WebImage.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = 368053748F8F05B738F1E9A54B4CE498 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D17F6F96FD0E5AB00C6715CBC0F28113 /* M6WebImage */,
+				7044437AD2E7786596A2A68846F5DA8D /* Pods-M6WebImage_Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		931D9F8EE871F9AFF1C2D1DC86E04094 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				903423BA1D7FF5AE00E3553E /* UIImageView+M6WebImage.swift in Sources */,
+				903423C01D804EB600E3553E /* M6WebImageDownloader.swift in Sources */,
+				903423C21D804EC100E3553E /* M6WebImageCache.swift in Sources */,
+				903423BE1D80015B00E3553E /* M6WebImageHelper.swift in Sources */,
+				9AEDCBD95DC5AB3C0F97392D050555BC /* M6WebImage-dummy.m in Sources */,
+				903423BC1D7FFB9F00E3553E /* M6WebImageManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF2C782227C20032A7F911B113210656 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				972A065D31C57B89EBDA65F1B31D9D85 /* Pods-M6WebImage_Tests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E314B55156E0458163A2E7B7DBCE0D74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = M6WebImage;
+			target = D17F6F96FD0E5AB00C6715CBC0F28113 /* M6WebImage */;
+			targetProxy = 6638EB92D308A9D0611CFA6B9B2313E5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		10DE1947DAC0ED28F6C0A9F9BD75D546 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = "RELEASE=1";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		485C390B535BEAB60ED095511F44A899 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E913855AF4E28719D132A3096B27AF8 /* M6WebImage.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/M6WebImage/M6WebImage-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/M6WebImage/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/M6WebImage/M6WebImage.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = M6WebImage;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		552D02D5BA751AC2E8790D2811D496CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				ONLY_ACTIVE_ARCH = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		7D3C62AEFC76D2872B556E6C80769B14 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3BDA3B0298383247AF3CF874F071860D /* Pods-M6WebImage_Tests.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-M6WebImage_Tests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-M6WebImage_Tests/Pods-M6WebImage_Tests.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_NAME = Pods_M6WebImage_Tests;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		9710CEEEBAB4F598B10982462089E8E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E913855AF4E28719D132A3096B27AF8 /* M6WebImage.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/M6WebImage/M6WebImage-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/M6WebImage/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/M6WebImage/M6WebImage.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = M6WebImage;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E51933115C32AF0CCDF03428D1C8AEBF /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71BBF332B3174CE298D2372CD21F44DE /* Pods-M6WebImage_Tests.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-M6WebImage_Tests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-M6WebImage_Tests/Pods-M6WebImage_Tests.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_NAME = Pods_M6WebImage_Tests;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				552D02D5BA751AC2E8790D2811D496CA /* Debug */,
+				10DE1947DAC0ED28F6C0A9F9BD75D546 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A0DB2E06D95EED56DDA49B38F664CCA /* Build configuration list for PBXNativeTarget "Pods-M6WebImage_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D3C62AEFC76D2872B556E6C80769B14 /* Debug */,
+				E51933115C32AF0CCDF03428D1C8AEBF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A623F47AB51B8F66AF4D6F4B3CA8259E /* Build configuration list for PBXNativeTarget "M6WebImage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				485C390B535BEAB60ED095511F44A899 /* Debug */,
+				9710CEEEBAB4F598B10982462089E8E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}

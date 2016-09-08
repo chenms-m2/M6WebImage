@@ -1,0 +1,6 @@
+framework module M6WebImage {
+  umbrella header "M6WebImage-umbrella.h"
+
+  export *
+  module * { export * }
+}

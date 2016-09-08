@@ -1,0 +1,14 @@
+PODS:
+  - M6WebImage (0.1.0)
+
+DEPENDENCIES:
+  - M6WebImage (from `../`)
+
+EXTERNAL SOURCES:
+  M6WebImage:
+    :path: ../
+
+SPEC CHECKSUMS:
+  M6WebImage: 08e7ae2bd4ccb99df29ecbe72890c03c4c62bd64
+
+COCOAPODS: 0.39.0
