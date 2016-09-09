@@ -33,14 +33,33 @@ public class M6WebImageManager {
     public func retrieveImageWithURL(url: NSURL,
                                      progressBlock: ProgressBlock? = nil,
                                      completionBlock: CompletionBlock? = nil) -> () {
-        cache.retrieveImageForKey(url.absoluteString, completionBlock: {[weak self] image in
+        let key = cache.keyForURL(url)
+        
+        // retrieve from cache
+        cache.retrieveImageForKey(key, completionBlock: {[weak self] image in
             if let image = image {
                 completionBlock?(image: image, error: nil)
             } else {
                 if let sSelf = self {
+                    // download
                     sSelf.downloader.downloadImageForURL(url,
                         progressBlock: progressBlock,
-                        completionBlock: completionBlock)
+                        completionBlock: { imageData, error in
+                            guard let imageData = imageData else {
+                                completionBlock?(image: nil, error: error)
+                                return
+                            }
+                            guard let image = UIImage(data: imageData) else {
+                                completionBlock?(image: nil, error: error)
+                                return
+                            }
+                            
+                            // store to cache
+                            sSelf.cache.storeImageToMemory(image, key: key)
+                            sSelf.cache.storeImageToDisk(imageData, key: key, completionBlock: { 
+                                completionBlock?(image: image, error: nil)
+                            })
+                    })
                 }
             }
         })

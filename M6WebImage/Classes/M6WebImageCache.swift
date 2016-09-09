@@ -134,4 +134,8 @@ extension M6WebImageCache {
     func filePathForKey(key: String) -> String {
         return (diskCachePath as NSString).stringByAppendingPathComponent(key)
     }
+    
+    func keyForURL(url: NSURL) -> String {
+        return url.absoluteString
+    }
 }

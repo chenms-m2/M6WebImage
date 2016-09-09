@@ -8,10 +8,6 @@
 
 import UIKit
 
-
-public typealias ProgressBlock = ((receivedSize: Int64, expectedSize: Int64) -> ())
-public typealias CompletionBlock = ((image: UIImage?, error: NSError?) -> ())
-
 extension UIImageView {
     
     public func m6_setImageWithURL(url: NSURL?,
