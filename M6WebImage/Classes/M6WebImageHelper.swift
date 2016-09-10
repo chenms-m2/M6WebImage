@@ -11,6 +11,7 @@ import Foundation
 public typealias ProgressBlock = ((receivedSize: Int64, expectedSize: Int64) -> ())
 public typealias CompletionBlock = ((image: UIImage?, error: NSError?) -> ())
 
+public let M6WebImagePrefix = "cn.m2.chenms."
 
 func safe_async_main_queue(block: (()->())) {
     safe_async_queue(dispatch_get_main_queue(), block)

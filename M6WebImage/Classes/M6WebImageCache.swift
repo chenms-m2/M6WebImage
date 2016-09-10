@@ -8,7 +8,7 @@
 
 import Foundation
 
-private let cacheName = "cn.m2.chenms.M6WebImageCache"
+private let cacheName = M6WebImagePrefix + "M6WebImageCache"
 
 // singleton
 private let instance = M6WebImageCache()
