@@ -1,8 +1,8 @@
 # M6WebImage
 
 ## 注
-- M6前缀提示不用于项目，只是学习的产物
-- 学习SDWebImage & Kingfisher产品，向作者致谢
+- M6前缀代表学习开源库的产物，不推荐用于项目
+- 代码学自[SDWebImage](https://github.com/rs/SDWebImage) & [Kingfisher](https://github.com/onevcat/Kingfisher)，感谢作者
 
 
 
