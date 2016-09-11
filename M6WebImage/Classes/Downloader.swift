@@ -1,5 +1,5 @@
 //
-//  M6WebImageDownloader.swift
+//  Downloader.swift
 //  Pods
 //
 //  Created by chenms on 16/9/7.
@@ -20,9 +20,9 @@ public enum M6WebImageError: Int {
 
 let timeout = 15.0
 
-private let instance = M6WebImageDownloader()
+private let instance = Downloader()
 
-class M6WebImageDownloader: NSObject {
+class Downloader: NSObject {
     
     var session: NSURLSession!
     var taskInfos: [String : TaskInfo]!
@@ -30,7 +30,7 @@ class M6WebImageDownloader: NSObject {
     var callbackQueue: dispatch_queue_t!
     
     // singleton
-    static func sharedInstance() -> M6WebImageDownloader {
+    static func sharedInstance() -> Downloader {
         return instance
     }
     
@@ -46,23 +46,22 @@ class M6WebImageDownloader: NSObject {
     
     func downloadImageForURL(url: NSURL,
                              progressBlock: DownloadProgressBlock? = nil,
-                             completionBlock: DownloadCompletionBlock? = nil) -> DownloadTask? {
+                             completionBlock: DownloadCompletionBlock? = nil) -> DownloadTask {
         
+        let downloadTask = DownloadTask()
         let callbackPair = callbackPairFromProgressBlock(progressBlock, completionBlock: completionBlock)
+        let taskInfo = updateTaskInfoForURL(url, uuid: downloadTask.uuid, callbackPair: callbackPair)
         
-        let taskInfo = updateTaskInfoWithCallbackPair(callbackPair, url: url)
+        downloadTask.task = taskInfo.task
+        downloadTask.downloader = self
         
-        let task = DownloadTask()
-        task.task = taskInfo.task
-        task.downloader = self
-        
-        return task
+        return downloadTask
     }
 
 }
 
 // MARK: - NSURLSessionDataDelegate
-extension M6WebImageDownloader: NSURLSessionDataDelegate { // TODO: 必须NSObject，why
+extension Downloader: NSURLSessionDataDelegate { // TODO: 必须NSObject，why
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
         if let statusCode = (response as? NSHTTPURLResponse)?.statusCode, let url = dataTask.originalRequest?.URL where (statusCode != 200 && statusCode != 201 && statusCode != 304) {
             let error = NSError(domain: M6WebImageErrorDomain, code: M6WebImageError.InvalidStatusCode.rawValue, userInfo: ["statusCode": statusCode, "localizedStringForStatusCode": NSHTTPURLResponse.localizedStringForStatusCode(statusCode)])
@@ -97,10 +96,10 @@ extension M6WebImageDownloader: NSURLSessionDataDelegate { // TODO: 必须NSObje
 }
 
 // MARK: - TaskInfo
-extension M6WebImageDownloader {
+extension Downloader {
     // TaskInfo
     class TaskInfo {
-        var callbackPairs = [CallbackPair]()
+        var callbackPairs = [String : CallbackPair]()
         var responseData = NSMutableData()
         var downloadTaskCount = 0
         var task: NSURLSessionTask
@@ -120,7 +119,22 @@ extension M6WebImageDownloader {
     }
     
     // store
-    func buildTaskInfoWithCallbackPair(callbackPair: CallbackPair, url: NSURL)  -> TaskInfo {
+    func updateTaskInfoForURL(url: NSURL, uuid: String, callbackPair: CallbackPair) -> TaskInfo {
+        var taskInfo: TaskInfo?
+        dispatch_barrier_sync(taskInfoQueue) {
+            taskInfo = self.taskInfos[self.keyForURL(url)]
+            if taskInfo == nil {
+                self.buildTaskInfoForURL(url)
+            }
+            
+            taskInfo?.downloadTaskCount += 1
+            taskInfo?.callbackPairs[uuid] = callbackPair
+        }
+        
+        return taskInfo!
+    }
+    
+    func buildTaskInfoForURL(url: NSURL) -> TaskInfo {
         let request = NSMutableURLRequest(URL: url, cachePolicy: .ReloadIgnoringLocalCacheData, timeoutInterval: timeout)
         let task = self.session.dataTaskWithRequest(request)
         
@@ -128,21 +142,6 @@ extension M6WebImageDownloader {
         self.taskInfos[self.keyForURL(url)] = taskInfo
         
         return taskInfo
-    }
-    
-    func updateTaskInfoWithCallbackPair(callbackPair: CallbackPair, url: NSURL) -> TaskInfo {
-        var taskInfo: TaskInfo?
-        dispatch_barrier_sync(taskInfoQueue) {
-            taskInfo = self.taskInfos[self.keyForURL(url)]
-            if taskInfo == nil {
-                self.buildTaskInfoWithCallbackPair(callbackPair, url: url)
-            }
-            
-            taskInfo?.downloadTaskCount += 1
-            taskInfo?.callbackPairs.append(callbackPair)
-        }
-        
-        return taskInfo!
     }
     
     // remove
@@ -153,11 +152,12 @@ extension M6WebImageDownloader {
     }
     
     // try cancel
-    func tryCancelTaskForURL(url: NSURL) {
+    func tryCancelTaskForURL(url: NSURL, uuid: String) {
         dispatch_barrier_sync(taskInfoQueue) {
             let key = self.keyForURL(url)
             if let taskInfo = self.taskInfos[key] {
                 taskInfo.downloadTaskCount -= 1
+                taskInfo.callbackPairs.removeValueForKey(uuid)
                 if taskInfo.downloadTaskCount == 0 {
                     self.taskInfos.removeValueForKey(key)
                 }
@@ -169,9 +169,9 @@ extension M6WebImageDownloader {
     func callbackProgressForURL(url: NSURL, receivedSize: Int64, expectedSize: Int64) {
         dispatch_sync(taskInfoQueue) {
             if let taskInfo = self.taskInfos[self.keyForURL(url)] {
-                for callbackPair in taskInfo.callbackPairs {
+                for callbackPair in taskInfo.callbackPairs.values {
                     dispatch_async(self.callbackQueue, {
-                        callbackPair.progressBlock?(receivedSize: receivedSize, expectedSize: expectedSize)
+                        callbackPair .progressBlock?(receivedSize: receivedSize, expectedSize: expectedSize)
                     })
                 }
             }
@@ -181,7 +181,7 @@ extension M6WebImageDownloader {
     func callbackCompletionForURL(url: NSURL, imageData: NSData?, error: NSError?) {
         dispatch_sync(taskInfoQueue) {
             if let taskInfo = self.taskInfos[self.keyForURL(url)] {
-                for callbackPair in taskInfo.callbackPairs {
+                for callbackPair in taskInfo.callbackPairs.values {
                     dispatch_async(self.callbackQueue, {
                         callbackPair.completionBlock?(imageData: imageData, error: error)
                     })
@@ -207,13 +207,14 @@ extension M6WebImageDownloader {
 
 // MARK: - DownloadTask
 class DownloadTask {
+    let uuid = NSUUID().UUIDString
     var task: NSURLSessionTask?
-    weak var downloader: M6WebImageDownloader?
+    weak var downloader: Downloader?
     
     func cancel() {
         task?.cancel()
         if let url = task?.originalRequest?.URL {
-            downloader?.tryCancelTaskForURL(url)
+            downloader?.tryCancelTaskForURL(url, uuid: uuid)
         }
     }
 }

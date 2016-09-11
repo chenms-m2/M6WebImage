@@ -11,11 +11,11 @@ import Foundation
 private let cacheName = M6WebImagePrefix + "M6WebImageCache"
 
 // singleton
-private let instance = M6WebImageCache()
+private let instance = Cache()
 
 
 // MARK: - base
-class M6WebImageCache {
+class Cache {
     // var
     
     // memory
@@ -28,7 +28,7 @@ class M6WebImageCache {
     private var callbackQueue: dispatch_queue_t!
     
     // singleton
-    static func sharedInstance() -> M6WebImageCache {
+    static func sharedInstance() -> Cache {
         return instance
     }
     
@@ -48,7 +48,7 @@ class M6WebImageCache {
 }
 
 // MARK: - retrieve
-extension M6WebImageCache {
+extension Cache {
     
     func retrieveImageForKey(key: String, completionBlock: ((UIImage?) -> ())? = nil) -> dispatch_block_t? {
         guard let completionBlock = completionBlock else {
@@ -60,7 +60,7 @@ extension M6WebImageCache {
             return nil
         } else {
             // TODO: 没有泄露？ 参考dispatch_block_cancel API
-            var sSelf: M6WebImageCache! = self
+            var sSelf: Cache! = self
             
             let block = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS, {
                 sSelf.retrieveImageFromDiskForKey(key, completionBlock: { image in
@@ -106,7 +106,7 @@ extension M6WebImageCache {
 
 
 // MARK: - store
-extension M6WebImageCache {
+extension Cache {
     func storeImageToMemory(image: UIImage, key: String) {
         memoryCache.setObject(image, forKey: key)
     }
@@ -130,7 +130,7 @@ extension M6WebImageCache {
 
 
 // MARK: - helper
-extension M6WebImageCache {
+extension Cache {
     func filePathForKey(key: String) -> String {
         return (diskCachePath as NSString).stringByAppendingPathComponent(key)
     }

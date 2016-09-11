@@ -8,41 +8,42 @@
 
 import Foundation
 
-private let instance = M6WebImageManager()
+private let instance = Manager()
 
-public class M6WebImageManager {
-    // MARK: - var
-    var cache: M6WebImageCache
-    var downloader: M6WebImageDownloader
+// MARK: - Manager
+public class Manager {
     
-
-    // MARK: - singleton
-    public static func sharedInstance() -> M6WebImageManager {
+    // var
+    var cache: Cache
+    var downloader: Downloader
+    
+    // singleton
+    static func sharedInstance() -> Manager {
         return instance
     }
     
-    
-    // MARK: - init
+    // init
     init() {
-        cache = M6WebImageCache.sharedInstance()
-        downloader = M6WebImageDownloader.sharedInstance()
+        cache = Cache.sharedInstance()
+        downloader = Downloader.sharedInstance()
     }
     
-    
-    // MARK: - retrieve
-    public func retrieveImageWithURL(url: NSURL,
+    // retrieve
+    func retrieveImageWithURL(url: NSURL,
                                      progressBlock: ProgressBlock? = nil,
-                                     completionBlock: CompletionBlock? = nil) -> () {
+                                     completionBlock: CompletionBlock? = nil) -> RetrieveImageTask {
         let key = cache.keyForURL(url)
         
+        let task = RetrieveImageTask()
+        
         // retrieve from cache
-        cache.retrieveImageForKey(key, completionBlock: {[weak self] image in
+        let disTask = cache.retrieveImageForKey(key, completionBlock: {[weak self] image in
             if let image = image {
                 completionBlock?(image: image, error: nil)
             } else {
                 if let sSelf = self {
                     // download
-                    sSelf.downloader.downloadImageForURL(url,
+                    let downloadTask = sSelf.downloader.downloadImageForURL(url,
                         progressBlock: progressBlock,
                         completionBlock: { imageData, error in
                             guard let imageData = imageData else {
@@ -60,9 +61,33 @@ public class M6WebImageManager {
                                 completionBlock?(image: image, error: nil)
                             })
                     })
+                    
+                    task.downloadTask = downloadTask
                 }
             }
         })
+        
+        task.diskTask = disTask
+        
+        return task
     }
-
 }
+
+// MARK: - RetrieveImageTask
+class RetrieveImageTask {
+    var diskTask: dispatch_block_t?
+    var downloadTask: DownloadTask?
+    
+    // cancel
+    func cancel() {
+        if let diskTask = diskTask {
+            dispatch_block_cancel(diskTask)
+        }
+        
+        if let downloadTask = downloadTask {
+            downloadTask.cancel()
+        }
+    }
+    
+}
+

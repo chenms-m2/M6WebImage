@@ -11,11 +11,11 @@
 		2A5E224A06A1A626E1609254B4FA9382 /* Pods-M6WebImage_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD8D6D454507A93EB3F832F1CFA470A /* Pods-M6WebImage_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2DB1E68A0396A55013F950E4F1BBA5CF /* M6WebImage-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0EB40F6E1968910079D12290087AEF64 /* M6WebImage-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		64CFF84CC2760271ADF2FD5EAE7021C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E89230EF59BC255123B67864ACF77 /* Foundation.framework */; };
-		903423BA1D7FF5AE00E3553E /* UIImageView+M6WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423B91D7FF5AE00E3553E /* UIImageView+M6WebImage.swift */; };
-		903423BC1D7FFB9F00E3553E /* M6WebImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BB1D7FFB9F00E3553E /* M6WebImageManager.swift */; };
-		903423BE1D80015B00E3553E /* M6WebImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BD1D80015B00E3553E /* M6WebImageHelper.swift */; };
-		903423C01D804EB600E3553E /* M6WebImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BF1D804EB600E3553E /* M6WebImageDownloader.swift */; };
-		903423C21D804EC100E3553E /* M6WebImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423C11D804EC100E3553E /* M6WebImageCache.swift */; };
+		903423BA1D7FF5AE00E3553E /* UIImageView+M6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423B91D7FF5AE00E3553E /* UIImageView+M6.swift */; };
+		903423BC1D7FFB9F00E3553E /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BB1D7FFB9F00E3553E /* Manager.swift */; };
+		903423BE1D80015B00E3553E /* CommonHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BD1D80015B00E3553E /* CommonHelper.swift */; };
+		903423C01D804EB600E3553E /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423BF1D804EB600E3553E /* Downloader.swift */; };
+		903423C21D804EC100E3553E /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903423C11D804EC100E3553E /* Cache.swift */; };
 		972A065D31C57B89EBDA65F1B31D9D85 /* Pods-M6WebImage_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E6F10B5E08A3E9E31ADDCE226CFCDC /* Pods-M6WebImage_Tests-dummy.m */; };
 		9AEDCBD95DC5AB3C0F97392D050555BC /* M6WebImage-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9197C4BDCF48D46075243990694F1783 /* M6WebImage-dummy.m */; };
 /* End PBXBuildFile section */
@@ -44,11 +44,11 @@
 		71BBF332B3174CE298D2372CD21F44DE /* Pods-M6WebImage_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-M6WebImage_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		783C54712AF81A21AAD711AE4D25FB4E /* M6WebImage.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = M6WebImage.modulemap; sourceTree = "<group>"; };
 		8318093CEEFB4072A909115505A2A817 /* Pods-M6WebImage_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-M6WebImage_Tests-frameworks.sh"; sourceTree = "<group>"; };
-		903423B91D7FF5AE00E3553E /* UIImageView+M6WebImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+M6WebImage.swift"; sourceTree = "<group>"; };
-		903423BB1D7FFB9F00E3553E /* M6WebImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageManager.swift; sourceTree = "<group>"; };
-		903423BD1D80015B00E3553E /* M6WebImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageHelper.swift; sourceTree = "<group>"; };
-		903423BF1D804EB600E3553E /* M6WebImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageDownloader.swift; sourceTree = "<group>"; };
-		903423C11D804EC100E3553E /* M6WebImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M6WebImageCache.swift; sourceTree = "<group>"; };
+		903423B91D7FF5AE00E3553E /* UIImageView+M6.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+M6.swift"; sourceTree = "<group>"; };
+		903423BB1D7FFB9F00E3553E /* Manager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Manager.swift; sourceTree = "<group>"; };
+		903423BD1D80015B00E3553E /* CommonHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonHelper.swift; sourceTree = "<group>"; };
+		903423BF1D804EB600E3553E /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		903423C11D804EC100E3553E /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		9197C4BDCF48D46075243990694F1783 /* M6WebImage-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "M6WebImage-dummy.m"; sourceTree = "<group>"; };
 		960D3982373441E76FB9DDA2FAC5054E /* M6WebImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "M6WebImage-prefix.pch"; sourceTree = "<group>"; };
 		9D0DB4437638EB32DD470DE5A0B286EC /* Pods-M6WebImage_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-M6WebImage_Tests-resources.sh"; sourceTree = "<group>"; };
@@ -133,11 +133,11 @@
 		AB5E00AAE567EC21B403BE21ECC7D712 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				903423B91D7FF5AE00E3553E /* UIImageView+M6WebImage.swift */,
-				903423BB1D7FFB9F00E3553E /* M6WebImageManager.swift */,
-				903423C11D804EC100E3553E /* M6WebImageCache.swift */,
-				903423BF1D804EB600E3553E /* M6WebImageDownloader.swift */,
-				903423BD1D80015B00E3553E /* M6WebImageHelper.swift */,
+				903423B91D7FF5AE00E3553E /* UIImageView+M6.swift */,
+				903423BB1D7FFB9F00E3553E /* Manager.swift */,
+				903423C11D804EC100E3553E /* Cache.swift */,
+				903423BF1D804EB600E3553E /* Downloader.swift */,
+				903423BD1D80015B00E3553E /* CommonHelper.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -281,12 +281,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				903423BA1D7FF5AE00E3553E /* UIImageView+M6WebImage.swift in Sources */,
-				903423C01D804EB600E3553E /* M6WebImageDownloader.swift in Sources */,
-				903423C21D804EC100E3553E /* M6WebImageCache.swift in Sources */,
-				903423BE1D80015B00E3553E /* M6WebImageHelper.swift in Sources */,
+				903423BA1D7FF5AE00E3553E /* UIImageView+M6.swift in Sources */,
+				903423C01D804EB600E3553E /* Downloader.swift in Sources */,
+				903423C21D804EC100E3553E /* Cache.swift in Sources */,
+				903423BE1D80015B00E3553E /* CommonHelper.swift in Sources */,
 				9AEDCBD95DC5AB3C0F97392D050555BC /* M6WebImage-dummy.m in Sources */,
-				903423BC1D7FFB9F00E3553E /* M6WebImageManager.swift in Sources */,
+				903423BC1D7FFB9F00E3553E /* Manager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
