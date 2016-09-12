@@ -65,7 +65,7 @@ class Downloader: NSObject {
 // MARK: - NSURLSessionDataDelegate
 extension Downloader: NSURLSessionDataDelegate { // TODO: 必须NSObject，why
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
-        if let statusCode = (response as? NSHTTPURLResponse)?.statusCode, let url = dataTask.originalRequest?.URL where (statusCode != 200 && statusCode != 201 && statusCode != 304) {
+        if let statusCode = (response as? NSHTTPURLResponse)?.statusCode, let url = dataTask.originalRequest?.URL where (statusCode < 200 && statusCode >= 300) {
             let error = NSError(domain: M6WebImageErrorDomain, code: M6WebImageError.InvalidStatusCode.rawValue, userInfo: ["statusCode": statusCode, "localizedStringForStatusCode": NSHTTPURLResponse.localizedStringForStatusCode(statusCode)])
             callbackCompletionForURL(url, image: nil, imageData: nil, error: error)
             
