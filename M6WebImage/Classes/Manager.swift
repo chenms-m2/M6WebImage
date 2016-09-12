@@ -38,6 +38,8 @@ public class Manager {
         
         // retrieve from cache
         let disTask = cache.retrieveImageForKey(key, completionBlock: {[weak self] image in
+            task.diskTask = nil
+            
             if let image = image {
                 completionBlock?(image: image, error: nil)
             } else {
@@ -45,19 +47,17 @@ public class Manager {
                     // download
                     let downloadTask = sSelf.downloader.downloadImageForURL(url,
                         progressBlock: progressBlock,
-                        completionBlock: { imageData, error in
-                            guard let imageData = imageData else {
-                                completionBlock?(image: nil, error: error)
-                                return
-                            }
-                            guard let image = UIImage(data: imageData) else {
+                        completionBlock: {image, imageData, error in
+                            task.downloadTask = nil
+                            
+                            guard let image = image, let imageData = imageData else {
                                 completionBlock?(image: nil, error: error)
                                 return
                             }
                             
-                            // store to cache
+                            // cache
                             sSelf.cache.storeImageToMemory(image, key: key)
-                            sSelf.cache.storeImageToDisk(imageData, key: key, completionBlock: { 
+                            sSelf.cache.storeImageToDisk(imageData, key: key, completionBlock: {
                                 completionBlock?(image: image, error: nil)
                             })
                     })

@@ -15,7 +15,7 @@ private let instance = Cache()
 
 
 // MARK: - base
-class Cache {
+public class Cache {
     // var
     
     // memory
@@ -42,8 +42,15 @@ class Cache {
         fileManager = NSFileManager()
         let diskPath = NSSearchPathForDirectoriesInDomains(.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true).first!
         diskCachePath = (diskPath as NSString).stringByAppendingPathComponent(cacheName)
-        ioQueue = dispatch_queue_create(cacheName + "io", DISPATCH_QUEUE_SERIAL)
-        callbackQueue = dispatch_queue_create(cacheName + "callback", DISPATCH_QUEUE_CONCURRENT)
+        ioQueue = dispatch_queue_create("Cache.ioQueue", DISPATCH_QUEUE_SERIAL)
+        callbackQueue = dispatch_queue_create("Cache.callbackQueue", DISPATCH_QUEUE_CONCURRENT)
+        
+        // notify
+         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(clearMemoryCache), name: UIApplicationDidReceiveMemoryWarningNotification, object: nil)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 }
 
@@ -103,10 +110,9 @@ extension Cache {
 
 }
 
-
-
-// MARK: - store
+// MARK: - store & remove
 extension Cache {
+    // store
     func storeImageToMemory(image: UIImage, key: String) {
         memoryCache.setObject(image, forKey: key)
     }
@@ -123,6 +129,47 @@ extension Cache {
             self.fileManager.createFileAtPath(path, contents: imageData, attributes: nil)
             dispatch_async(self.callbackQueue, {
                 completionBlock?()
+            })
+        }
+    }
+    
+    // remove
+    func removeImageFromMemoryForKey(key: String) {
+        memoryCache.removeObjectForKey(key)
+    }
+    
+    func removeImageFromDistForKey(key: String) {
+        dispatch_async(ioQueue) {
+            do {
+                let path = self.filePathForKey(key)
+                try self.fileManager.removeItemAtPath(path)
+            } catch _ {}
+        }
+    }
+}
+
+// MARK: - clear
+extension Cache {
+    public func clearCache(completionBlock: ((Bool)->())?) {
+        clearMemoryCache()
+        clearDiskCache(completionBlock)
+    }
+    
+    @objc func clearMemoryCache() {
+        memoryCache.removeAllObjects()
+    }
+    
+    func clearDiskCache(completionBlock: ((Bool)->())?) {
+        dispatch_async(ioQueue) { 
+            var success = true
+            do {
+                try self.fileManager.removeItemAtPath(self.diskCachePath)
+            } catch _ {
+                success = false
+            }
+            
+            dispatch_async(self.callbackQueue, {
+                completionBlock?(success)
             })
         }
     }

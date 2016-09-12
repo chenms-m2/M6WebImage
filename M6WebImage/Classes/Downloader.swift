@@ -9,7 +9,7 @@
 import Foundation
 
 typealias DownloadProgressBlock = ProgressBlock
-typealias DownloadCompletionBlock = ((imageData:NSData?, error: NSError?) -> ())
+typealias DownloadCompletionBlock = ((image: UIImage?, imageData:NSData?, error: NSError?) -> ())
 typealias CallbackPair = (progressBlock: DownloadProgressBlock?, completionBlock: DownloadCompletionBlock?)
 
 public let M6WebImageErrorDomain = M6WebImagePrefix + "M6WebImageErrorDomain"
@@ -27,6 +27,7 @@ class Downloader: NSObject {
     var session: NSURLSession!
     var taskInfos: [String : TaskInfo]!
     var taskInfoQueue: dispatch_queue_t!
+    var processQueue: dispatch_queue_t!
     var callbackQueue: dispatch_queue_t!
     
     // singleton
@@ -40,8 +41,9 @@ class Downloader: NSObject {
         
         session = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration(), delegate: self, delegateQueue: NSOperationQueue.mainQueue())
         taskInfos = [String : TaskInfo]()
-        taskInfoQueue = dispatch_queue_create(M6WebImagePrefix + "taskInfoQueue", DISPATCH_QUEUE_CONCURRENT)
-        callbackQueue = dispatch_queue_create(M6WebImagePrefix + "callbackQueue", DISPATCH_QUEUE_CONCURRENT)
+        taskInfoQueue = dispatch_queue_create("Downloader.taskInfoQueue", DISPATCH_QUEUE_CONCURRENT)
+        processQueue = dispatch_queue_create("Downloader.processQueue", DISPATCH_QUEUE_CONCURRENT)
+        callbackQueue = dispatch_queue_create("Downloader.callbackQueue", DISPATCH_QUEUE_CONCURRENT)
     }
     
     func downloadImageForURL(url: NSURL,
@@ -65,7 +67,7 @@ extension Downloader: NSURLSessionDataDelegate { // TODO: 必须NSObject，why
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
         if let statusCode = (response as? NSHTTPURLResponse)?.statusCode, let url = dataTask.originalRequest?.URL where (statusCode != 200 && statusCode != 201 && statusCode != 304) {
             let error = NSError(domain: M6WebImageErrorDomain, code: M6WebImageError.InvalidStatusCode.rawValue, userInfo: ["statusCode": statusCode, "localizedStringForStatusCode": NSHTTPURLResponse.localizedStringForStatusCode(statusCode)])
-            callbackCompletionForURL(url, imageData: nil, error: error)
+            callbackCompletionForURL(url, image: nil, imageData: nil, error: error)
             
             removeTaskInfoForURL(url)
             
@@ -88,9 +90,22 @@ extension Downloader: NSURLSessionDataDelegate { // TODO: 必须NSObject，why
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         if let url = task.originalRequest?.URL {
             let taskInfo = taskInfoForURL(url)
-            callbackCompletionForURL(url, imageData: taskInfo?.responseData, error: error)
+            let data = taskInfo?.responseData
             
-            removeTaskInfoForURL(url)
+            // fail
+            if error != nil || data == nil {
+                callbackCompletionForURL(url, image: nil, imageData: nil, error: error)
+                removeTaskInfoForURL(url)
+                
+                return
+            }
+            
+            // success
+            dispatch_async(processQueue, {
+                let image = UIImage(data: data!)
+                self.callbackCompletionForURL(url, image: image, imageData: data, error: nil)
+                self.removeTaskInfoForURL(url)
+            })
         }
     }
 }
@@ -178,12 +193,12 @@ extension Downloader {
         }
     }
     
-    func callbackCompletionForURL(url: NSURL, imageData: NSData?, error: NSError?) {
+    func callbackCompletionForURL(url: NSURL, image: UIImage?, imageData: NSData?, error: NSError?) {
         dispatch_sync(taskInfoQueue) {
             if let taskInfo = self.taskInfos[self.keyForURL(url)] {
                 for callbackPair in taskInfo.callbackPairs.values {
                     dispatch_async(self.callbackQueue, {
-                        callbackPair.completionBlock?(imageData: imageData, error: error)
+                        callbackPair.completionBlock?(image: image, imageData: imageData, error: error)
                     })
                 }
             }
