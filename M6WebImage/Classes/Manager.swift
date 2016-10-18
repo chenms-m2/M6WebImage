@@ -11,7 +11,7 @@ import Foundation
 private let instance = Manager()
 
 // MARK: - Manager
-public class Manager {
+open class Manager {
     
     // var
     var cache: Cache
@@ -29,7 +29,7 @@ public class Manager {
     }
     
     // retrieve
-    func retrieveImageWithURL(url: NSURL,
+    func retrieveImageWithURL(_ url: URL,
                                      progressBlock: ProgressBlock? = nil,
                                      completionBlock: CompletionBlock? = nil) -> RetrieveImageTask {
         let key = cache.keyForURL(url)
@@ -41,7 +41,7 @@ public class Manager {
             task.diskTask = nil
             
             if let image = image {
-                completionBlock?(image: image, error: nil)
+                completionBlock?(image, nil)
             } else {
                 if let sSelf = self {
                     // download
@@ -51,14 +51,14 @@ public class Manager {
                             task.downloadTask = nil
                             
                             guard let image = image, let imageData = imageData else {
-                                completionBlock?(image: nil, error: error)
+                                completionBlock?(nil, error)
                                 return
                             }
                             
                             // cache
                             sSelf.cache.storeImageToMemory(image, key: key)
                             sSelf.cache.storeImageToDisk(imageData, key: key, completionBlock: {
-                                completionBlock?(image: image, error: nil)
+                                completionBlock?(image, nil)
                             })
                     })
                     
@@ -75,13 +75,15 @@ public class Manager {
 
 // MARK: - RetrieveImageTask
 class RetrieveImageTask {
-    var diskTask: dispatch_block_t?
+    var diskTask: DispatchWorkItem?
     var downloadTask: DownloadTask?
+    
+    init() {}
     
     // cancel
     func cancel() {
         if let diskTask = diskTask {
-            dispatch_block_cancel(diskTask)
+            diskTask.cancel()
         }
         
         if let downloadTask = downloadTask {

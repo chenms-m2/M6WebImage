@@ -8,20 +8,20 @@
 
 import Foundation
 
-public typealias ProgressBlock = ((receivedSize: Int64, expectedSize: Int64) -> ())
-public typealias CompletionBlock = ((image: UIImage?, error: NSError?) -> ())
+public typealias ProgressBlock = ((_ receivedSize: Int64, _ expectedSize: Int64) -> ())
+public typealias CompletionBlock = ((_ image: UIImage?, _ error: NSError?) -> ())
 
 public let M6WebImagePrefix = "cn.m2.chenms."
 
-func safe_async_main_queue(block: (()->())) {
-    safe_async_queue(dispatch_get_main_queue(), block)
+func safe_async_main_queue(_ block: @escaping (()->())) {
+    safe_async_queue(DispatchQueue.main, block)
 }
 
-private func safe_async_queue(queue: dispatch_queue_t, _ block: (()->())) {
-    if queue === dispatch_get_main_queue() && NSThread.isMainThread() {
+private func safe_async_queue(_ queue: DispatchQueue, _ block: @escaping (()->())) {
+    if queue === DispatchQueue.main && Thread.isMainThread {
         block()
     } else {
-        dispatch_async(queue, { 
+        queue.async(execute: { 
             block()
         })
     }

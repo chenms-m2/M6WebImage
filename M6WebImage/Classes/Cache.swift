@@ -15,17 +15,17 @@ private let instance = Cache()
 
 
 // MARK: - base
-public class Cache {
+open class Cache {
     // var
     
     // memory
-    private let memoryCache: NSCache!
+    fileprivate let memoryCache: NSCache<AnyObject, AnyObject>!
     
     // disk
-    private let fileManager: NSFileManager!
-    private var diskCachePath: String!
-    private var ioQueue: dispatch_queue_t!
-    private var callbackQueue: dispatch_queue_t!
+    fileprivate let fileManager: FileManager!
+    fileprivate var diskCachePath: String!
+    fileprivate var ioQueue: DispatchQueue!
+    fileprivate var callbackQueue: DispatchQueue!
     
     // singleton
     static func sharedInstance() -> Cache {
@@ -39,25 +39,25 @@ public class Cache {
         memoryCache.name = cacheName
         
         // disk
-        fileManager = NSFileManager()
-        let diskPath = NSSearchPathForDirectoriesInDomains(.CachesDirectory, NSSearchPathDomainMask.UserDomainMask, true).first!
-        diskCachePath = (diskPath as NSString).stringByAppendingPathComponent(cacheName)
-        ioQueue = dispatch_queue_create("Cache.ioQueue", DISPATCH_QUEUE_SERIAL)
-        callbackQueue = dispatch_queue_create("Cache.callbackQueue", DISPATCH_QUEUE_CONCURRENT)
+        fileManager = FileManager()
+        let diskPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).first!
+        diskCachePath = (diskPath as NSString).appendingPathComponent(cacheName)
+        ioQueue = DispatchQueue(label: "Cache.ioQueue", attributes: [])
+        callbackQueue = DispatchQueue(label: "Cache.callbackQueue", attributes: DispatchQueue.Attributes.concurrent)
         
         // notify
-         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(clearMemoryCache), name: UIApplicationDidReceiveMemoryWarningNotification, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(clearMemoryCache), name: NSNotification.Name.UIApplicationDidReceiveMemoryWarning, object: nil)
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
 // MARK: - retrieve
 extension Cache {
     
-    func retrieveImageForKey(key: String, completionBlock: ((UIImage?) -> ())? = nil) -> dispatch_block_t? {
+    func retrieveImageForKey(_ key: String, completionBlock: ((UIImage?) -> ())? = nil) -> DispatchWorkItem? {
         guard let completionBlock = completionBlock else {
             return nil
         }
@@ -69,35 +69,35 @@ extension Cache {
             // TODO: 没有泄露？ 参考dispatch_block_cancel API
             var sSelf: Cache! = self
             
-            let block = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS, {
+            let block = DispatchWorkItem {
                 sSelf.retrieveImageFromDiskForKey(key, completionBlock: { image in
                     if let image = image {
                         sSelf.storeImageToMemory(image, key: key)
-                        dispatch_async(sSelf.callbackQueue, {
+                        sSelf.callbackQueue.async(execute: {
                             completionBlock(image)
                         })
                     } else {
-                        dispatch_async(sSelf.callbackQueue, {
+                        sSelf.callbackQueue.async(execute: {
                             completionBlock(nil)
                         })
                     }
                     sSelf = nil
                 })
-            })
+            }
             
-            dispatch_async(ioQueue, block)
+            ioQueue.async(execute: block)
             
             return block
         }
     }
     
     // memory
-    func retrieveImageFromMemoryForKey(key: String) -> UIImage? {
-        return memoryCache.objectForKey(key) as? UIImage
+    func retrieveImageFromMemoryForKey(_ key: String) -> UIImage? {
+        return memoryCache.object(forKey: key as AnyObject) as? UIImage
     }
     
     // disk
-    func retrieveImageFromDiskForKey(key: String, completionBlock: ((UIImage?) -> ())? = nil) {
+    func retrieveImageFromDiskForKey(_ key: String, completionBlock: ((UIImage?) -> ())? = nil) {
         guard let completionBlock = completionBlock else {
             return
         }
@@ -113,36 +113,36 @@ extension Cache {
 // MARK: - store & remove
 extension Cache {
     // store
-    func storeImageToMemory(image: UIImage, key: String) {
-        memoryCache.setObject(image, forKey: key)
+    func storeImageToMemory(_ image: UIImage, key: String) {
+        memoryCache.setObject(image, forKey: key as AnyObject)
     }
     
-    func storeImageToDisk(imageData: NSData, key: String, completionBlock:(() -> ())? = nil) {
-        dispatch_async(ioQueue) { 
-            if !self.fileManager.fileExistsAtPath(self.diskCachePath) {
+    func storeImageToDisk(_ imageData: Data, key: String, completionBlock:(() -> ())? = nil) {
+        ioQueue.async { 
+            if !self.fileManager.fileExists(atPath: self.diskCachePath) {
                 do {
-                    try self.fileManager.createDirectoryAtPath(self.diskCachePath, withIntermediateDirectories: true, attributes: nil)
+                    try self.fileManager.createDirectory(atPath: self.diskCachePath, withIntermediateDirectories: true, attributes: nil)
                 } catch _ {} // TODO: 是否处理
             }
             
             let path = self.filePathForKey(key)
-            self.fileManager.createFileAtPath(path, contents: imageData, attributes: nil)
-            dispatch_async(self.callbackQueue, {
+            self.fileManager.createFile(atPath: path, contents: imageData, attributes: nil)
+            self.callbackQueue.async(execute: {
                 completionBlock?()
             })
         }
     }
     
     // remove
-    func removeImageFromMemoryForKey(key: String) {
-        memoryCache.removeObjectForKey(key)
+    func removeImageFromMemoryForKey(_ key: String) {
+        memoryCache.removeObject(forKey: key as AnyObject)
     }
     
-    func removeImageFromDistForKey(key: String) {
-        dispatch_async(ioQueue) {
+    func removeImageFromDistForKey(_ key: String) {
+        ioQueue.async {
             do {
                 let path = self.filePathForKey(key)
-                try self.fileManager.removeItemAtPath(path)
+                try self.fileManager.removeItem(atPath: path)
             } catch _ {}
         }
     }
@@ -150,7 +150,7 @@ extension Cache {
 
 // MARK: - clear
 extension Cache {
-    public func clearCache(completionBlock: ((Bool)->())?) {
+    public func clearCache(_ completionBlock: ((Bool)->())?) {
         clearMemoryCache()
         clearDiskCache(completionBlock)
     }
@@ -159,16 +159,16 @@ extension Cache {
         memoryCache.removeAllObjects()
     }
     
-    func clearDiskCache(completionBlock: ((Bool)->())?) {
-        dispatch_async(ioQueue) { 
+    func clearDiskCache(_ completionBlock: ((Bool)->())?) {
+        ioQueue.async { 
             var success = true
             do {
-                try self.fileManager.removeItemAtPath(self.diskCachePath)
+                try self.fileManager.removeItem(atPath: self.diskCachePath)
             } catch _ {
                 success = false
             }
             
-            dispatch_async(self.callbackQueue, {
+            self.callbackQueue.async(execute: {
                 completionBlock?(success)
             })
         }
@@ -178,11 +178,11 @@ extension Cache {
 
 // MARK: - helper
 extension Cache {
-    func filePathForKey(key: String) -> String {
-        return (diskCachePath as NSString).stringByAppendingPathComponent(key)
+    func filePathForKey(_ key: String) -> String {
+        return (diskCachePath as NSString).appendingPathComponent(key)
     }
     
-    func keyForURL(url: NSURL) -> String {
+    func keyForURL(_ url: URL) -> String {
         return url.absoluteString
     }
 }

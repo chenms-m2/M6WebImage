@@ -9,13 +9,13 @@
 import Foundation
 
 typealias DownloadProgressBlock = ProgressBlock
-typealias DownloadCompletionBlock = ((image: UIImage?, imageData:NSData?, error: NSError?) -> ())
+typealias DownloadCompletionBlock = ((_ image: UIImage?, _ imageData:Data?, _ error: NSError?) -> ())
 typealias CallbackPair = (progressBlock: DownloadProgressBlock?, completionBlock: DownloadCompletionBlock?)
 
 public let M6WebImageErrorDomain = M6WebImagePrefix + "M6WebImageErrorDomain"
 
 public enum M6WebImageError: Int {
-    case InvalidStatusCode = 40001
+    case invalidStatusCode = 40001
 }
 
 let timeout = 15.0
@@ -24,11 +24,11 @@ private let instance = Downloader()
 
 class Downloader: NSObject {
     
-    var session: NSURLSession!
+    var session: Foundation.URLSession!
     var taskInfos: [String : TaskInfo]!
-    var taskInfoQueue: dispatch_queue_t!
-    var processQueue: dispatch_queue_t!
-    var callbackQueue: dispatch_queue_t!
+    var taskInfoQueue: DispatchQueue!
+    var processQueue: DispatchQueue!
+    var callbackQueue: DispatchQueue!
     
     // singleton
     static func sharedInstance() -> Downloader {
@@ -39,14 +39,14 @@ class Downloader: NSObject {
     override init() {
         super.init()
         
-        session = NSURLSession(configuration: NSURLSessionConfiguration.ephemeralSessionConfiguration(), delegate: self, delegateQueue: NSOperationQueue.mainQueue())
+        session = Foundation.URLSession(configuration: URLSessionConfiguration.ephemeral, delegate: self, delegateQueue: OperationQueue.main)
         taskInfos = [String : TaskInfo]()
-        taskInfoQueue = dispatch_queue_create("Downloader.taskInfoQueue", DISPATCH_QUEUE_CONCURRENT)
-        processQueue = dispatch_queue_create("Downloader.processQueue", DISPATCH_QUEUE_CONCURRENT)
-        callbackQueue = dispatch_queue_create("Downloader.callbackQueue", DISPATCH_QUEUE_CONCURRENT)
+        taskInfoQueue = DispatchQueue(label: "Downloader.taskInfoQueue", attributes: DispatchQueue.Attributes.concurrent)
+        processQueue = DispatchQueue(label: "Downloader.processQueue", attributes: DispatchQueue.Attributes.concurrent)
+        callbackQueue = DispatchQueue(label: "Downloader.callbackQueue", attributes: DispatchQueue.Attributes.concurrent)
     }
     
-    func downloadImageForURL(url: NSURL,
+    func downloadImageForURL(_ url: URL,
                              progressBlock: DownloadProgressBlock? = nil,
                              completionBlock: DownloadCompletionBlock? = nil) -> DownloadTask {
         
@@ -63,47 +63,47 @@ class Downloader: NSObject {
 }
 
 // MARK: - NSURLSessionDataDelegate
-extension Downloader: NSURLSessionDataDelegate { // TODO: 必须NSObject，why
-    func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
-        if let statusCode = (response as? NSHTTPURLResponse)?.statusCode, let url = dataTask.originalRequest?.URL where (statusCode < 200 && statusCode >= 300) {
-            let error = NSError(domain: M6WebImageErrorDomain, code: M6WebImageError.InvalidStatusCode.rawValue, userInfo: ["statusCode": statusCode, "localizedStringForStatusCode": NSHTTPURLResponse.localizedStringForStatusCode(statusCode)])
+extension Downloader: URLSessionDataDelegate { // TODO: 必须NSObject，why
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        if let statusCode = (response as? HTTPURLResponse)?.statusCode, let url = dataTask.originalRequest?.url , (statusCode < 200 && statusCode >= 300) {
+            let error = NSError(domain: M6WebImageErrorDomain, code: M6WebImageError.invalidStatusCode.rawValue, userInfo: ["statusCode": statusCode, "localizedStringForStatusCode": HTTPURLResponse.localizedString(forStatusCode: statusCode)])
             callbackCompletionForURL(url, image: nil, imageData: nil, error: error)
             
             removeTaskInfoForURL(url)
             
-            completionHandler(.Cancel)
+            completionHandler(.cancel)
             
             return
         }
         
-        completionHandler(.Allow)
+        completionHandler(.allow)
     }
     
-    func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveData data: NSData) {
-        if let url = dataTask.originalRequest?.URL {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        if let url = dataTask.originalRequest?.url {
             let taskInfo = taskInfoForURL(url)
-            taskInfo?.responseData.appendData(data)
-            callbackProgressForURL(url, receivedSize: Int64(data.length), expectedSize: dataTask.response?.expectedContentLength ?? 0)
+            taskInfo?.responseData.append(data)
+            callbackProgressForURL(url, receivedSize: Int64(data.count), expectedSize: dataTask.response?.expectedContentLength ?? 0)
         }
     }
     
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
-        if let url = task.originalRequest?.URL {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        if let url = task.originalRequest?.url {
             let taskInfo = taskInfoForURL(url)
             let data = taskInfo?.responseData
             
             // fail
             if error != nil || data == nil {
-                callbackCompletionForURL(url, image: nil, imageData: nil, error: error)
+                callbackCompletionForURL(url, image: nil, imageData: nil, error: error as NSError?)
                 removeTaskInfoForURL(url)
                 
                 return
             }
             
             // success
-            dispatch_async(processQueue, {
-                let image = UIImage(data: data!)
-                self.callbackCompletionForURL(url, image: image, imageData: data, error: nil)
+            processQueue.async(execute: {
+                let image = UIImage(data: data! as Data)
+                self.callbackCompletionForURL(url, image: image, imageData: data as Data?, error: nil)
                 self.removeTaskInfoForURL(url)
             })
         }
@@ -117,16 +117,16 @@ extension Downloader {
         var callbackPairs = [String : CallbackPair]()
         var responseData = NSMutableData()
         var downloadTaskCount = 0
-        var task: NSURLSessionTask
+        var task: URLSessionTask
         
-        init(task: NSURLSessionTask) {
+        init(task: URLSessionTask) {
             self.task = task
         }
     }
     
-    func taskInfoForURL(url: NSURL) -> TaskInfo? {
+    func taskInfoForURL(_ url: URL) -> TaskInfo? {
         var taskInfo: TaskInfo?
-        dispatch_sync(taskInfoQueue) {
+        taskInfoQueue.sync {
             taskInfo = self.taskInfos[self.keyForURL(url)]
         }
  
@@ -134,24 +134,25 @@ extension Downloader {
     }
     
     // store
-    func updateTaskInfoForURL(url: NSURL, uuid: String, callbackPair: CallbackPair) -> TaskInfo {
+    func updateTaskInfoForURL(_ url: URL, uuid: String, callbackPair: CallbackPair) -> TaskInfo {
         var taskInfo: TaskInfo?
-        dispatch_barrier_sync(taskInfoQueue) {
+        taskInfoQueue.sync(flags: .barrier, execute: {
             taskInfo = self.taskInfos[self.keyForURL(url)]
             if taskInfo == nil {
-                self.buildTaskInfoForURL(url)
+                taskInfo = self.buildTaskInfoForURL(url)
             }
             
             taskInfo?.downloadTaskCount += 1
             taskInfo?.callbackPairs[uuid] = callbackPair
-        }
+        }) 
         
         return taskInfo!
     }
     
-    func buildTaskInfoForURL(url: NSURL) -> TaskInfo {
-        let request = NSMutableURLRequest(URL: url, cachePolicy: .ReloadIgnoringLocalCacheData, timeoutInterval: timeout)
-        let task = self.session.dataTaskWithRequest(request)
+    func buildTaskInfoForURL(_ url: URL) -> TaskInfo {
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: timeout)
+        
+        let task = self.session.dataTask(with: request)
         
         let taskInfo = TaskInfo(task: task)
         self.taskInfos[self.keyForURL(url)] = taskInfo
@@ -160,45 +161,45 @@ extension Downloader {
     }
     
     // remove
-    func removeTaskInfoForURL(url: NSURL) {
-        dispatch_barrier_sync(taskInfoQueue) {
-            self.taskInfos.removeValueForKey(self.keyForURL(url))
-        }
+    func removeTaskInfoForURL(_ url: URL) {
+        taskInfoQueue.sync(flags: .barrier, execute: {
+            _ = self.taskInfos.removeValue(forKey: self.keyForURL(url))
+        }) 
     }
     
     // try cancel
-    func tryCancelTaskForURL(url: NSURL, uuid: String) {
-        dispatch_barrier_sync(taskInfoQueue) {
+    func tryCancelTaskForURL(_ url: URL, uuid: String) {
+        taskInfoQueue.sync(flags: .barrier, execute: {
             let key = self.keyForURL(url)
             if let taskInfo = self.taskInfos[key] {
                 taskInfo.downloadTaskCount -= 1
-                taskInfo.callbackPairs.removeValueForKey(uuid)
+                taskInfo.callbackPairs.removeValue(forKey: uuid)
                 if taskInfo.downloadTaskCount == 0 {
-                    self.taskInfos.removeValueForKey(key)
+                    self.taskInfos.removeValue(forKey: key)
                 }
             }
-        }
+        }) 
     }
     
     // callback
-    func callbackProgressForURL(url: NSURL, receivedSize: Int64, expectedSize: Int64) {
-        dispatch_sync(taskInfoQueue) {
+    func callbackProgressForURL(_ url: URL, receivedSize: Int64, expectedSize: Int64) {
+        taskInfoQueue.sync {
             if let taskInfo = self.taskInfos[self.keyForURL(url)] {
                 for callbackPair in taskInfo.callbackPairs.values {
-                    dispatch_async(self.callbackQueue, {
-                        callbackPair .progressBlock?(receivedSize: receivedSize, expectedSize: expectedSize)
+                    self.callbackQueue.async(execute: {
+                        callbackPair .progressBlock?(receivedSize, expectedSize)
                     })
                 }
             }
         }
     }
     
-    func callbackCompletionForURL(url: NSURL, image: UIImage?, imageData: NSData?, error: NSError?) {
-        dispatch_sync(taskInfoQueue) {
+    func callbackCompletionForURL(_ url: URL, image: UIImage?, imageData: Data?, error: NSError?) {
+        taskInfoQueue.sync {
             if let taskInfo = self.taskInfos[self.keyForURL(url)] {
                 for callbackPair in taskInfo.callbackPairs.values {
-                    dispatch_async(self.callbackQueue, {
-                        callbackPair.completionBlock?(image: image, imageData: imageData, error: error)
+                    self.callbackQueue.async(execute: {
+                        callbackPair.completionBlock?(image, imageData, error)
                     })
                 }
             }
@@ -206,11 +207,11 @@ extension Downloader {
     }
     
     // helper
-    func keyForURL(url: NSURL) -> String {
+    func keyForURL(_ url: URL) -> String {
         return url.absoluteString
     }
     
-    func callbackPairFromProgressBlock(progressBlock: DownloadProgressBlock?, completionBlock: DownloadCompletionBlock?) -> CallbackPair {
+    func callbackPairFromProgressBlock(_ progressBlock: DownloadProgressBlock?, completionBlock: DownloadCompletionBlock?) -> CallbackPair {
         var callbackPair: CallbackPair
         callbackPair.progressBlock = progressBlock
         callbackPair.completionBlock = completionBlock
@@ -222,13 +223,13 @@ extension Downloader {
 
 // MARK: - DownloadTask
 class DownloadTask {
-    let uuid = NSUUID().UUIDString
-    var task: NSURLSessionTask?
+    let uuid = UUID().uuidString
+    var task: URLSessionTask?
     weak var downloader: Downloader?
     
     func cancel() {
         task?.cancel()
-        if let url = task?.originalRequest?.URL {
+        if let url = task?.originalRequest?.url {
             downloader?.tryCancelTaskForURL(url, uuid: uuid)
         }
     }

@@ -12,7 +12,7 @@ import UIKit
 extension UIImageView {
     
     // set image
-    public func m6_setImageWithURL(url: NSURL,
+    public func m6_setImageWithURL(_ url: URL,
                                    placeHolderImage: UIImage? = nil,
                                    progressBlock: ProgressBlock? = nil,
                                    completionBlock: CompletionBlock? = nil) {
@@ -24,12 +24,12 @@ extension UIImageView {
                         return
                     }
                     guard let image = image else {
-                        completionBlock?(image: nil, error: error)
+                        completionBlock?(nil, error)
                         return
                     }
                     
                     sSelf.image = image
-                    completionBlock?(image: image, error: error)
+                    completionBlock?(image, error)
                 })
             })
         
@@ -49,11 +49,11 @@ private var imageTaskKey: Void?
 
 // MARK: - store image task
 extension UIImageView {
-    private func m6_imageTask() -> RetrieveImageTask? {
+    fileprivate func m6_imageTask() -> RetrieveImageTask? {
         return (objc_getAssociatedObject(self, &imageTaskKey) as? RetrieveImageTask)
     }
     
-    private func m6_setImageTask(task: RetrieveImageTask) {
+    fileprivate func m6_setImageTask(_ task: RetrieveImageTask) {
         objc_setAssociatedObject(self, &imageTaskKey, task, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 }
